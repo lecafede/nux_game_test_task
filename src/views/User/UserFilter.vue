@@ -1,5 +1,7 @@
 <template>
-  <div class="filter">
+  <div
+    class="user__filter"
+  >
     <AppInput
       id="search"
       type="text"
@@ -22,10 +24,10 @@
 
 <script>
   import AppInput from '@/components/AppInput.vue';
-  import AppSelect from "@/components/AppSelect.vue";
+  import AppSelect from '@/components/AppSelect.vue';
 
   export default {
-    name: 'Filter',
+    name: 'UserFilter',
 
     components: {
       AppInput,
@@ -72,12 +74,12 @@
 </script>
 
 <style>
-.filter {
+.user__filter {
   display: grid;
   grid-gap: 24px;
-  margin-bottom: 24px;
-  grid-template-rows: 1fr 1fr 1fr;
-  align-items: center;
   margin-top: 24px;
+  margin-bottom: 24px;
+  align-items: center;
+  grid-template-rows: 1fr 1fr 1fr;
 }
 </style>

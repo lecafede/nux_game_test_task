@@ -1,5 +1,5 @@
 <template>
-  <div class="card__item">
+  <div class="todo__item">
     <AppTextItem
       text="Id:"
       :info="id"
@@ -17,7 +17,7 @@
       :info="completed"
     />
     <button
-      class="card-button"
+      class="todo-button"
       @click="handleButtonClick(id)"
     >
       Add to Favorites
@@ -29,7 +29,7 @@
 import AppTextItem from '@/components/AppTextItem.vue';
 
 export default {
-  name: 'AllCardsItem',
+  name: 'AllTodosItem',
 
   components: {
     AppTextItem,
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style lang="scss">
-.card__item {
+.todo__item {
   display: flex;
   padding: 24px;
   font-size: 18px;
@@ -75,7 +75,7 @@ export default {
   box-shadow: 4px 4px 2px 1px #5c5c5c;
 }
 
-.card-button {
+.todo-button {
   width: 100%;
   color: #FFF;
   border: none;

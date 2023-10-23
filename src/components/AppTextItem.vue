@@ -1,25 +1,36 @@
 <template>
-  <p class="text">
+  <p
+    class="text"
+  >
     {{ text }}
-    <span class="label">
-      {{ label }}
+    <span
+      class="info"
+    >
+      {{ info }}
     </span>
   </p>
 </template>
 
 <script>
 export default {
-  name: 'InfoText',
+  name: 'AppTextItem',
 
   props: {
     text: {
       type: String,
       default: '',
     },
-    label: {
-      type: [String, Number],
+    info: {
+      type: [String, Number, Boolean],
       default: '',
     },
   }
 };
 </script>
+
+<style scoped>
+  .info {
+    font-weight: 800;
+  }
+
+</style>

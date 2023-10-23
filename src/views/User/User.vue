@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div class="container2">
-      <div class="container3">
+    <div class="filter-todo__container">
+      <div class="filter__container">
         <UserInfo
           :id="getCurrentUser.id"
           :name="getCurrentUser.name"
@@ -13,11 +13,11 @@
           :username="getCurrentUser.username"
         />
         <UserFilter
-          :searchValue="searchValue"
+          :search-value="searchValue"
           :user-option-list="allUserOptionList"
           :status-option-list="allStatusOptionList"
-          :selectedStatusValue="selectedStatusValue"
-          :selectedUserIdValue="selectedUserIdValue"
+          :selected-status-value="selectedStatusValue"
+          :selected-user-id-value="selectedUserIdValue"
           @update-search-value="updateSearchValue"
           @update-selected-status-value="updateSelectedStatusValue"
           @update-selected-user-id-value="updateSelectedUserIdValue"
@@ -27,27 +27,27 @@
           button-name="Add"
           @form-submitted="handleFormSubmission"
         >
-          <template>
+          <template #default>
             <AppInput
               id="userId"
+              v-model.trim="userId"
               type="text"
               name="userId"
               label="User ID"
               placeholder="Enter User ID"
-              v-model.trim="userId"
             />
             <AppInput
               id="title"
+              v-model.trim="title"
               type="text"
               name="title"
               label="Title"
               placeholder="Enter title"
-              v-model.trim="title"
             />
           </template>
         </AppForm>
       </div>
-      <AllCards
+      <AllTodos
         :list="filteredTodoListBySearch"
         @on-button-click="addToFavorite"
       />
@@ -57,37 +57,42 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import UserInfo from '@/views/User/Info.vue';
+import FilterType from '@/const/filter';
 import AppForm from '@/components/AppForm.vue';
-import UserFilter from "@/views/User/Filter.vue";
 import AppInput from '@/components/AppInput.vue';
-import AllCards from "@/views/User/Cards/AllCards.vue";
+import UserInfo from '@/views/User/UserInfo.vue';
+import UserFilter from "@/views/User/UserFilter.vue";
+import AllTodos from '@/views/User/Todos/AllTodos.vue';
+import userFetchingMixin from '@/mixins/userFetchingMixin';
 
 export default {
-  name: 'UserPage',
+  name: 'User',
 
   components: {
     AppForm,
     UserInfo,
     AppInput,
-    AllCards,
+    AllTodos,
     UserFilter,
   },
+
+  mixins: [
+    userFetchingMixin,
+  ],
 
   data() {
     return {
       title: '',
       userId: '',
       searchValue: '',
-      selectedStatusValue: 'all',
-      selectedUserIdValue: 'all',
+      selectedStatusValue: FilterType.ALL,
+      selectedUserIdValue: FilterType.ALL,
       localeStorageList: Object.keys(localStorage),
     };
   },
 
   computed: {
     ...mapGetters([
-      'getAllUsers',
       'getAllTodos',
     ]),
 
@@ -107,13 +112,13 @@ export default {
 
     filteredTodoListByStatus() {
       switch (this.selectedStatusValue) {
-        case 'all':
+        case FilterType.ALL:
           return this.getAllTodos;
-        case 'completed':
+        case FilterType.COMPLETED:
           return this.filteredCompletedStatusList;
-        case 'uncompleted':
+        case FilterType.UNCOMPLETED:
           return this.filteredUnCompletedStatusList;
-        case 'favorites':
+        case FilterType.FAVORITES:
           return this.filteredFavoriteList;
         default:
           return this.getAllTodos;
@@ -121,15 +126,15 @@ export default {
     },
 
     filteredCompletedStatusList() {
-      const allTodos = this.getAllTodos;
+      const list = this.getAllTodos;
 
-      return allTodos.filter((item) => item.completed === true);
+      return list.filter((item) => item.completed === true);
     },
 
     filteredUnCompletedStatusList() {
-      const allTodos = this.getAllTodos;
+      const list = this.getAllTodos;
 
-      return allTodos.filter((item) => item.completed === false);
+      return list.filter((item) => item.completed === false);
     },
 
     filteredFavoriteList() {
@@ -139,9 +144,9 @@ export default {
     },
 
     getAllUsersIdList() {
-      const allTodos = this.getAllTodos;
+      const list = this.getAllTodos;
 
-      return Array.from(new Set(allTodos.map((item) => {
+      return Array.from(new Set(list.map((item) => {
         const { userId } = item;
 
         return userId;
@@ -149,10 +154,13 @@ export default {
     },
 
     allUserOptionList() {
-      const list = ['all', ...this.getAllUsersIdList];
+      const list = [
+        FilterType.ALL,
+        ...this.getAllUsersIdList
+      ];
 
       return list.map((item) => ({
-        name: item === 'all' ? 'All Users' : item,
+        name: item === FilterType.ALL ? 'All Users' : item,
         value: item,
       }))
     },
@@ -160,33 +168,33 @@ export default {
     allStatusOptionList() {
       return [
         {
-          name: 'All',
-          value: 'all'
+          name: 'All Status',
+          value: FilterType.ALL,
         },
         {
           name: 'Completed',
-          value: 'completed'
+          value: FilterType.COMPLETED,
         },
         {
           name: 'Uncompleted',
-          value: 'uncompleted'
+          value: FilterType.UNCOMPLETED,
         },
         {
           name: 'Favorites',
-          value: 'favorites'
+          value: FilterType.FAVORITES,
         },
-      ]
+      ];
     },
 
     filteredTodoListByUserId() {
       const list = this.filteredTodoListByStatus;
       const userId = this.selectedUserIdValue;
 
-      if (userId === 'all') {
+      if (userId === FilterType.ALL) {
         return list;
       }
 
-      return list.filter((item) => item.userId === Number.parseInt(userId))
+      return list.filter((item) => item.userId === Number.parseInt(userId));
     },
 
     filteredTodoListBySearch() {
@@ -203,12 +211,10 @@ export default {
 
   mounted() {
     this.fetchLoadAllTodos();
-    this.fetchLoadAllUsers();
   },
 
   methods: {
     ...mapActions([
-      'loadAllUsers',
       'loadAllTodos',
     ]),
 
@@ -224,14 +230,19 @@ export default {
       this.localeStorageList.push(String(id));
 
       localStorage.setItem(id, id);
-    },
-
-    fetchLoadAllUsers() {
-      this.loadAllUsers();
+      window.alert(`Success: Todo with ID ${id} has been successfully added to favorites.`);
     },
 
     fetchLoadAllTodos() {
+      if (this.getAllTodos.length) {
+        return;
+      }
+
       this.loadAllTodos()
+        .catch((error) =>
+          console.warn(
+            error.response.data.message
+          ));
     },
 
     updateSearchValue(event) {
@@ -250,7 +261,7 @@ export default {
 </script>
 
 <style>
-.container2 {
+.filter-todo__container {
   position: relative;
   display: grid;
   grid-gap: 24px;
@@ -258,20 +269,18 @@ export default {
   grid-template-columns: 1fr 4fr;
 }
 
-.container3 {
-  position: sticky;
-  top: 15px;
+.filter__container {
+  min-width: 350px;
 }
 
-@media (max-width: 1440px) {
-  .cards {
-    grid-template-columns: 1fr 1fr;
+@media screen and (max-width: 1440px) {
+  .filter-todo__container {
+    grid-template-columns: 2fr 4fr;
   }
 }
 
-
-@media (max-width: 512px) {
-  .container2 {
+@media screen and (max-width: 768px) {
+  .filter-todo__container {
     grid-template-columns: 1fr;
   }
 }

@@ -1,56 +1,59 @@
 <template>
-  <div class="container">
-    <div class="registration-form">
-      <AppForm
-        title="Registration"
-        button-name="Register"
-        @form-submitted="handleFormSubmission"
-      >
-        <template>
-          <AppInput
-            id="username"
-            type="text"
-            name="username"
-            label="User Name"
-            placeholder="Enter username"
-            :error="isShowUserErrorMessage"
-            error-message="You must enter only letters"
-            v-model.trim="$v.userName.$model"
-          />
-          <AppInput
-            id="phone"
-            type="tel"
-            name="phone"
-            label="Phone Number"
-            placeholder="Enter phone number"
-            :error="isShowPhoneErrorMessage"
-            error-message="You must enter only numbers or symbols"
-            v-model.trim="$v.phoneNumber.$model"
-          />
-        </template>
-      </AppForm>
-    </div>
+  <div
+    class="container"
+  >
+    <AppForm
+      title="Registration"
+      button-name="Register"
+      @form-submitted="handleFormSubmission"
+    >
+      <template #default>
+        <AppInput
+          id="username"
+          v-model.trim="$v.userName.$model"
+          type="text"
+          name="username"
+          label="User Name"
+          placeholder="Enter username"
+          :error="isShowUserErrorMessage"
+          error-message="You must enter only letters"
+        />
+        <AppInput
+          id="phone"
+          v-model.trim="$v.phoneNumber.$model"
+          type="tel"
+          name="phone"
+          label="Phone Number"
+          placeholder="Enter phone number"
+          :error="isShowPhoneErrorMessage"
+          error-message="You must enter only numbers or symbols"
+        />
+      </template>
+    </AppForm>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import { validationMixin } from 'vuelidate';
+import AppForm from "@/components/AppForm.vue";
 import ValidationType from '@/const/validation';
 import checkValidation from '@/utils/validation';
 import AppInput from '@/components/AppInput.vue';
 import { required } from 'vuelidate/lib/validators';
-import AppForm from "@/components/AppForm.vue";
+import userFetchingMixin from "@/mixins/userFetchingMixin";
 
 export default {
-  name: 'MainPage',
+  name: 'Main',
 
   components: {
     AppForm,
     AppInput,
   },
 
-  mixins: [validationMixin],
+  mixins: [
+    validationMixin,
+    userFetchingMixin,
+  ],
 
   data() {
     return {
@@ -71,10 +74,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
-      'getAllUsers',
-    ]),
-
     isShowUserErrorMessage() {
       return !this.$v.userName.custom;
     },
@@ -89,15 +88,7 @@ export default {
     },
   },
 
-  mounted() {
-    this.fetchLoadAllUsers();
-  },
-
   methods: {
-    ...mapActions([
-      'loadAllUsers',
-    ]),
-
     handleFormSubmission() {
       this.$v.$touch();
 
@@ -112,14 +103,6 @@ export default {
       const { id } = user;
 
       this.$router.push({ path: `/user/${id}` });
-    },
-
-    fetchLoadAllUsers() {
-      if (this.getAllUsers.length) {
-        return;
-      }
-
-      this.loadAllUsers();
     },
   },
 };

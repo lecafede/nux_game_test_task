@@ -1,38 +1,44 @@
 <template>
-  <div class="user-info">
-    <div class="user-info__header">
+  <div
+    class="user-info"
+  >
+    <div
+      class="user-info__header"
+    >
       <p>User Info</p>
     </div>
-    <div class="user-info__main">
-      <AppColumnItem
+    <div
+      class="user-info__main"
+    >
+      <AppTextItem
         text="Id:"
         :info="id"
       />
-      <AppColumnItem
+      <AppTextItem
         text="Username:"
         :info="username"
       />
-      <AppColumnItem
+      <AppTextItem
         text="Name:"
         :info="name"
       />
-      <AppColumnItem
+      <AppTextItem
         text="Email:"
         :info="email"
       />
-      <AppColumnItem
+      <AppTextItem
         text="Phone:"
         :info="phone"
       />
-      <AppColumnItem
+      <AppTextItem
         text="Address:"
         :info="address"
       />
-      <AppColumnItem
+      <AppTextItem
         text="Website:"
         :info="website"
       />
-      <AppColumnItem
+      <AppTextItem
         text="Company:"
         :info="company"
       />
@@ -41,13 +47,13 @@
 </template>
 
 <script>
-  import AppColumnItem from '@/components/AppTextItem.vue';
+  import AppTextItem from '@/components/AppTextItem.vue';
 
   export default {
-    name: 'Info',
+    name: 'UserInfo',
 
     components: {
-      AppColumnItem,
+      AppTextItem,
     },
 
     props: {
