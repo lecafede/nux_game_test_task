@@ -1,6 +1,7 @@
 const ValidationType = {
-  NAME: /^[a-zA-Z]*$/,
-  PHONE: /^[0-9!@#$%^&*()_+{}[\]:;<>,.?~\\|\-+=]*$/,
+  LETTERS: /^[a-zA-Z]*$/,
+  NUMBERS: '/[^0-9]/',
+  SYMBOLS_AND_NUMBERS: /^[0-9!@#$%^&*()_+{}[\]:;<>,.?~\\|\-+=]*$/,
 };
 
 export default ValidationType;

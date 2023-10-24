@@ -36,19 +36,23 @@
           <template #default>
             <AppInput
               id="userId"
-              v-model.trim="userId"
+              v-model.trim="$v.userId.$model"
               type="text"
               name="userId"
               label="User ID"
               placeholder="Enter User ID"
+              :error="isShowUserIdErrorMessage"
+              error-message="You must enter only numbers"
             />
             <AppInput
               id="title"
-              v-model.trim="title"
+              v-model.trim="$v.title.$model"
               type="text"
               name="title"
               label="Title"
               placeholder="Enter title"
+              :error="isShowTitleErrorMessage"
+              error-message="You must enter only letters"
             />
           </template>
         </AppForm>
@@ -62,13 +66,17 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex';
 import FilterType from '@/const/filter';
 import randomId from '@/utils/randomId';
+import validate from '@/utils/validation';
 import MessageType from '@/const/message';
+import { validationMixin } from 'vuelidate';
 import AppForm from '@/components/AppForm.vue';
+import ValidationType from '@/const/validation';
 import AppInput from '@/components/AppInput.vue';
 import UserInfo from '@/views/User/UserInfo.vue';
+import { required } from 'vuelidate/lib/validators';
 import UserFilter from "@/views/User/UserFilter.vue";
 import AllTodos from '@/views/User/Todos/AllTodos.vue';
 import userFetchingMixin from '@/mixins/userFetchingMixin';
@@ -85,6 +93,7 @@ export default {
   },
 
   mixins: [
+    validationMixin,
     userFetchingMixin,
   ],
 
@@ -97,6 +106,17 @@ export default {
       selectedUserIdValue: FilterType.ALL,
       localeStorageList: Object.keys(localStorage),
     };
+  },
+
+  validations: {
+    title: {
+      required,
+      custom: validate(ValidationType.LETTERS),
+    },
+    userId: {
+      required,
+      custom: validate(ValidationType.SYMBOLS_AND_NUMBERS),
+    },
   },
 
   computed: {
@@ -215,6 +235,14 @@ export default {
         return title.toLowerCase().includes(searchTerm);
       });
     },
+
+    isShowUserIdErrorMessage() {
+      return !this.$v.userId.custom;
+    },
+
+    isShowTitleErrorMessage() {
+      return !this.$v.title.custom;
+    },
   },
 
   mounted() {
@@ -227,6 +255,12 @@ export default {
     ]),
 
     handleFormSubmit() {
+      this.$v.$touch();
+
+      if (this.$v.$error) {
+        return;
+      }
+
       this.$store.commit('setNewTodo',
         {
           id: randomId(),
@@ -234,6 +268,7 @@ export default {
           userId: Number.parseInt(this.userId)
         });
 
+      this.resetForm();
       window.alert(MessageType.NEW_TODO);
     },
 
@@ -254,6 +289,11 @@ export default {
           console.warn(
             error.response.data.message
           ));
+    },
+
+    resetForm() {
+      this.userId = '';
+      this.title = '';
     },
 
     updateSearchValue(event) {

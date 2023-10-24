@@ -22,7 +22,7 @@ export default new Vuex.Store({
       state.allTodos = payload;
     },
     setNewTodo(state, payload) {
-      state.allTodos.unshift(payload);
+      state.allTodos.push(payload);
     },
   },
   actions: {

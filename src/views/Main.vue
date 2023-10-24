@@ -66,11 +66,11 @@ export default {
   validations: {
     userName: {
       required,
-      custom: validate(ValidationType.NAME),
+      custom: validate(ValidationType.LETTERS),
     },
     phoneNumber: {
       required,
-      custom: validate(ValidationType.PHONE),
+      custom: validate(ValidationType.SYMBOLS_AND_NUMBERS),
     },
   },
 
