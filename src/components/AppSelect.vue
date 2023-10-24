@@ -1,6 +1,6 @@
 <template>
   <select
-    class="custom-select"
+    class="custom__select"
     :value="selectedOption"
     @input="updateValue"
   >
@@ -49,7 +49,7 @@
 </script>
 
 <style scoped>
-.custom-select {
+.custom__select {
   width: 100%;
   height: 100%;
   min-height: 100%;

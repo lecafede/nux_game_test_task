@@ -1,7 +1,13 @@
 <template>
-  <div class="container">
-    <div class="filter-todo__container">
-      <div class="filter__container">
+  <div
+    class="container"
+  >
+    <div
+      class="filter-todo__container"
+    >
+      <div
+        class="filter__container"
+      >
         <UserInfo
           :id="getCurrentUser.id"
           :name="getCurrentUser.name"
@@ -25,7 +31,7 @@
         <AppForm
           title="Create Todo"
           button-name="Add"
-          @form-submitted="handleFormSubmission"
+          @form-submitted="handleFormSubmit"
         >
           <template #default>
             <AppInput
@@ -49,7 +55,7 @@
       </div>
       <AllTodos
         :list="filteredTodoListBySearch"
-        @on-button-click="addToFavorite"
+        @on-button-click="addTodoToFavorite"
       />
     </div>
   </div>
@@ -58,6 +64,8 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import FilterType from '@/const/filter';
+import randomId from '@/utils/randomId';
+import MessageType from '@/const/message';
 import AppForm from '@/components/AppForm.vue';
 import AppInput from '@/components/AppInput.vue';
 import UserInfo from '@/views/User/UserInfo.vue';
@@ -218,19 +226,22 @@ export default {
       'loadAllTodos',
     ]),
 
-    handleFormSubmission() {
-      this.$store.commit('addNewTodo',
+    handleFormSubmit() {
+      this.$store.commit('setNewTodo',
         {
+          id: randomId(),
           title: this.title,
           userId: Number.parseInt(this.userId)
         });
+
+      window.alert(MessageType.NEW_TODO);
     },
 
-    addToFavorite(id) {
+    addTodoToFavorite(id) {
       this.localeStorageList.push(String(id));
 
       localStorage.setItem(id, id);
-      window.alert(`Success: Todo with ID ${id} has been successfully added to favorites.`);
+      window.alert(MessageType.FAVORITE);
     },
 
     fetchLoadAllTodos() {
@@ -261,27 +272,27 @@ export default {
 </script>
 
 <style>
-.filter-todo__container {
-  position: relative;
-  display: grid;
-  grid-gap: 24px;
-  align-items: baseline;
-  grid-template-columns: 1fr 4fr;
-}
-
-.filter__container {
-  min-width: 350px;
-}
-
-@media screen and (max-width: 1440px) {
   .filter-todo__container {
-    grid-template-columns: 2fr 4fr;
+    display: grid;
+    grid-gap: 24px;
+    align-items: start;
+    position: relative;
+    grid-template-columns: 1fr 4fr;
   }
-}
 
-@media screen and (max-width: 768px) {
-  .filter-todo__container {
-    grid-template-columns: 1fr;
+  .filter__container {
+    min-width: 350px;
   }
-}
+
+  @media screen and (max-width: 1440px) {
+    .filter-todo__container {
+      grid-template-columns: 2fr 4fr;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .filter-todo__container {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

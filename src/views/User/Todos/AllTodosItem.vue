@@ -16,22 +16,23 @@
       text="Completed:"
       :info="completed"
     />
-    <button
-      class="todo-button"
+    <AppButton
       @click="handleButtonClick(id)"
     >
       Add to Favorites
-    </button>
+    </AppButton>
   </div>
 </template>
 
 <script>
+import AppButton from '@/components/AppButton.vue';
 import AppTextItem from '@/components/AppTextItem.vue';
 
 export default {
   name: 'AllTodosItem',
 
   components: {
+    AppButton,
     AppTextItem,
   },
 
@@ -73,24 +74,5 @@ export default {
   background-color: #A5A5A5;
   justify-content: space-between;
   box-shadow: 4px 4px 2px 1px #5c5c5c;
-}
-
-.todo-button {
-  width: 100%;
-  color: #FFF;
-  border: none;
-  outline: none;
-  padding: 10px;
-  margin-top: 5px;
-  font-size: 17px;
-  cursor: pointer;
-  font-weight: 600;
-  line-height: 21px;
-  border-radius: 5px;
-  background-color: #519945;
-
-  &:hover {
-     background-color: #3d6b34;
-   }
 }
 </style>

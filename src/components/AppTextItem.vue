@@ -1,10 +1,10 @@
 <template>
   <p
-    class="text"
+    class="text__item"
   >
     {{ text }}
     <span
-      class="info"
+      class="info__item"
     >
       {{ info }}
     </span>
@@ -29,8 +29,7 @@ export default {
 </script>
 
 <style scoped>
-  .info {
+  .info__item {
     font-weight: 800;
   }
-
 </style>

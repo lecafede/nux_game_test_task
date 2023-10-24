@@ -5,7 +5,7 @@
     <AppForm
       title="Registration"
       button-name="Register"
-      @form-submitted="handleFormSubmission"
+      @form-submitted="handleFormSubmit"
     >
       <template #default>
         <AppInput
@@ -35,9 +35,10 @@
 
 <script>
 import { validationMixin } from 'vuelidate';
-import AppForm from "@/components/AppForm.vue";
+import validate from '@/utils/validation';
+import MessageType from "@/const/message";
+import AppForm from '@/components/AppForm.vue';
 import ValidationType from '@/const/validation';
-import checkValidation from '@/utils/validation';
 import AppInput from '@/components/AppInput.vue';
 import { required } from 'vuelidate/lib/validators';
 import userFetchingMixin from "@/mixins/userFetchingMixin";
@@ -65,11 +66,11 @@ export default {
   validations: {
     userName: {
       required,
-      custom: checkValidation(ValidationType.NAME),
+      custom: validate(ValidationType.NAME),
     },
     phoneNumber: {
       required,
-      custom: checkValidation(ValidationType.PHONE),
+      custom: validate(ValidationType.PHONE),
     },
   },
 
@@ -89,11 +90,11 @@ export default {
   },
 
   methods: {
-    handleFormSubmission() {
+    handleFormSubmit() {
       this.$v.$touch();
 
       if (this.$v.$error || !this.getValidUser) {
-        return window.alert('Login Error: Invalid username or phone number.');
+        return window.alert(MessageType.LOGIN_ERROR);
       }
 
       this.redirectUser(this.getValidUser);

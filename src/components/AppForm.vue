@@ -14,19 +14,21 @@
       class="form__main"
     >
       <slot />
-      <button
-        type="submit"
-        class="form-main__button"
-      >
+      <AppButton>
         {{ buttonName }}
-      </button>
+      </AppButton>
     </div>
   </form>
 </template>
 
 <script>
+  import AppButton from '@/components/AppButton.vue';
   export default {
     name: 'AppForm',
+
+    components: {
+      AppButton,
+    },
 
     props: {
       title: {
@@ -49,13 +51,13 @@
 
 <style lang="scss" scoped>
 .form {
-  max-width: 447px;
   margin: auto;
+  max-width: 447px;
 }
 
 .form__header {
-  padding: 15px 0;
   color: #5F5F5F;
+  padding: 15px 0;
   font-weight: 400;
   line-height: 21px;
   background-color: #A5A5A5;
@@ -67,25 +69,6 @@
   flex-direction: column;
   background-color: #C3C3C3;
   padding: 15px 25px 25px 30px;
-}
-
-.form-main__button {
-  width: 100%;
-  color: #FFF;
-  border: none;
-  outline: none;
-  padding: 10px;
-  margin-top: 5px;
-  font-size: 17px;
-  cursor: pointer;
-  font-weight: 600;
-  line-height: 21px;
-  border-radius: 5px;
-  background-color: #519945;
-
-  &:hover {
-     background-color: #3d6b34;
-   }
 }
 
 @media screen and (max-width: 768px) {

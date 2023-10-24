@@ -21,7 +21,7 @@ export default new Vuex.Store({
     setAllTodos(state, payload) {
       state.allTodos = payload;
     },
-    addNewTodo(state, payload) {
+    setNewTodo(state, payload) {
       state.allTodos.unshift(payload);
     },
   },

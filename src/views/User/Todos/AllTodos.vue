@@ -9,25 +9,25 @@
       :title="item.title"
       :user-id="item.userId"
       :completed="item.completed"
-      @on-button-click="addToFavorite"
+      @on-button-click="addTodoToFavorite"
     />
-    <div
+    <AppEmpty
       v-if="!list.length"
-      class="todos__error-message"
-    >
-      <p>Oops! No todos found.</p>
-      <p>Looks like you chose the wrong settings.</p>
-    </div>
+      title="Oops! No todos found."
+      sub-title="Looks like you chose the wrong settings."
+    />
   </div>
 </template>
 
 <script>
+  import AppEmpty from '@/components/AppEmpty.vue';
   import AllTodosItem from '@/views/User/Todos/AllTodosItem.vue';
 
   export default {
     name: 'AllTodos',
 
     components: {
+      AppEmpty,
       AllTodosItem,
     },
 
@@ -39,29 +39,19 @@
     },
 
     methods: {
-      addToFavorite(id) {
+      addTodoToFavorite(id) {
         this.$emit('on-button-click', id);
       },
     }
   };
 </script>
 
-<style>
+<style scoped>
 .todos {
   display: grid;
   grid-gap: 20px;
   justify-content: space-between;
   grid-template-columns: 1fr 1fr 1fr;
-}
-
-.todos__error-message {
-  top: 50%;
-  left: 50%;
-  color: white;
-  font-size: 32px;
-  font-weight: 800;
-  position: absolute;
-  transform: translate(-50%, -50%);
 }
 
 @media screen and (max-width: 1280px) {
@@ -73,12 +63,6 @@
 @media screen and (max-width: 1024px) {
   .todos {
     grid-template-columns: 1fr;
-  }
-}
-
-@media screen and (max-width: 1440px) {
-  .todos__error-message {
-    display: none;
   }
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div
-    class="custom-input"
+    class="custom__input"
   >
     <label
-      class="custom-input-label"
+      class="custom__input-label"
       :for="id"
     >
       {{ label }}
@@ -13,14 +13,14 @@
         :type="type"
         :name="name"
         :value="value"
-        class="custom-input-field"
+        class="custom__input-field"
         :placeholder="placeholder"
         @input="updateValue"
       >
     </label>
     <div
       v-if="error"
-      class="error-container"
+      class="custom__input-error"
     >
       {{ errorMessage }}
     </div>
@@ -90,7 +90,7 @@ export default {
 </script>
 
 <style>
-.custom-input-label {
+.custom__input-label {
   gap: 4px;
   display: flex;
   color: #5F5F5F;
@@ -101,7 +101,7 @@ export default {
   align-items: flex-start;
 }
 
-.custom-input-field {
+.custom__input-field {
   width: 100%;
   height: 100%;
   padding: 10px;
@@ -117,7 +117,7 @@ export default {
   background-color: white;
 }
 
-.error-container {
+.custom__input-error {
   height: 24px;
   display: flex;
   color: red;
